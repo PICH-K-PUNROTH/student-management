@@ -1,0 +1,28 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: pod2-login
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: pod2
+  template:
+    metadata:
+      labels:
+        app: pod2
+    spec:
+      containers:
+        - name: login-service
+          image: login-service:1.0
+          imagePullPolicy: Never
+          ports:
+            - containerPort: 3002
+          env:
+            - name: JWT_SECRET
+              value: "change-me-exam-secret"
+            - name: MONGO_URI
+              valueFrom:
+                secretKeyRef:
+                  name: mongo-secret
+                  key: MONGO_URI
